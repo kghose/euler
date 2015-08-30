@@ -7,9 +7,6 @@ What is the 10001st prime number?
 
 Since we have to generate a lot of primes I'm going to use the trusty trial division method, but make
 it a bit more effecient
-
-
-
 |#
 #lang racket
 (require rackunit)
