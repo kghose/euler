@@ -42,7 +42,7 @@ is part of the global optimum path.
 
 However, if you consider every node at level l (n_l), you can tell which
 would be the optimum path choice at each node (left or right) given the nodes
-at level l+1, (n_(l+1)). Let the sum of the value of the 
+at level l+1, (n_(l+1)). Let the sum of the value of the
 
 
 By indicating the sum value of the optimum choice at each node we can
@@ -73,8 +73,8 @@ when this process is done
       (load-tree in-file (append l (list (map string->number (string-split line)))))))
 
 (test-case "File load"
-           (check-equal? (load-tree (open-input-file "p18_data1.txt")) `((3) (7 4) (2 4 6) (8 5 9 3)))
-           )
+           (check-equal? (load-tree (open-input-file "p18_data1.txt")) `((3) (7 4) (2 4 6) (8 5 9 3))))
+
 
 ;; Given a list, create another list from the maximum of adjacent pairs
 ; l -> list of numbers
@@ -87,8 +87,8 @@ when this process is done
 (test-case "List pair max"
            (check-equal? (adjacent-pair-max `(4)) `(4))
            (check-equal? (adjacent-pair-max `(4 1 10 3)) `(4 10 10))
-           (check-equal? (adjacent-pair-max `(10 9 8)) `(10 9))
-           )
+           (check-equal? (adjacent-pair-max `(10 9 8)) `(10 9)))
+
 
 ;; Add two equal length lists together
 (define (list-sum l1 l2)
@@ -97,8 +97,8 @@ when this process is done
     [_ (append (list (+ (first l1) (first l2))) (list-sum (rest l1) (rest l2)))]))
 
 (test-case "List sum"
-           (check-equal? (list-sum `(1 2 3) `(3 2 1)) `(4 4 4))
-           )
+           (check-equal? (list-sum `(1 2 3) `(3 2 1)) `(4 4 4)))
+
 
 ;; Tree is represented as a list of lists, starting with the root
 ;; For each level of the tree, we find the adjacent-pair-max, add it to
@@ -106,14 +106,14 @@ when this process is done
 (define (max-traverse tree)
   (cond
     [(= (length tree) 1) (adjacent-pair-max (first tree))] ;; leaves
-    [else (adjacent-pair-max (list-sum (first tree) (max-traverse (rest tree))))])) 
+    [else (adjacent-pair-max (list-sum (first tree) (max-traverse (rest tree))))]))
 
 (test-case "Tree traverse"
            (check-equal? (max-traverse `((1))) `(1))
            (check-equal? (max-traverse `((1) (2 3))) `(4))
            (check-equal? (max-traverse `((1) (2 3) (4 5 6))) `(10))
-           (check-equal? (max-traverse `((3) (7 4) (2 4 6) (8 5 9 3))) `(23))
-           )
+           (check-equal? (max-traverse `((3) (7 4) (2 4 6) (8 5 9 3))) `(23)))
+
 
 (time (let ([k (max-traverse (load-tree (open-input-file "p18_data2.txt")))]) (display k)))
 (let ([tree (load-tree (open-input-file "p18_data2.txt"))])

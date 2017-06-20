@@ -1,0 +1,41 @@
+Project Euler: Problem 25
+
+The Fibonacci sequence is defined by the recurrence relation:
+
+Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+Hence the first 12 terms will be:
+
+F1 = 1
+F2 = 1
+F3 = 2
+F4 = 3
+F5 = 5
+F6 = 8
+F7 = 13
+F8 = 21
+F9 = 34
+F10 = 55
+F11 = 89
+F12 = 144
+The 12th term, F12, is the first term to contain three digits.
+
+What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+
+
+2015.11.17
+----------
+Trying non brute force method. Starting with the idea of digit cascade: what are the conditions under which D(Fn) > max(D(Fn-1), D(Fn-2)) where D(x) is the number of digits in the number x. Also, is D(Fn) - max(D(Fn-1), D(Fn-2)) always less than 2?
+
+Is D(.) equivalent to ceil(log10(.))? Yes it is, from the definition of log and our ten based numbering system. I don’t think this helps us, but it’s interesting.
+
+Say 
+Fn-1 = 10^q.a(n-1, q) + 10^(q-1).a(n-1, q-1) + ... + a(n-1, 0)
+Fn-2 = 10^p.a(n-2, p) + 10^(q-1).a(n-2, q-1) + ... + a(n-2, 0)
+
+Then
+Fn = 
+
+
+
+
+
