@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
     int memo[28123] = {0};          // For the abundance memoization
     bool checked[28123] = {false};  // Have we checked this number already to see if
-                                    // It's  
+                                    // It's expressible as a sum of abundant numbers?
     for(int i = 1; i < 28123; i++) {     
         for(int j = 1; j < 28123 - i; j++) {
             if (is_abundant(i, memo) && is_abundant(j, memo))
