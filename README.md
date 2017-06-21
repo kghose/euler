@@ -5,10 +5,11 @@ Just me working through the project Euler problems. I often try out different la
 so the code reflects that. It reflects a short flirtation with functional programming (programs in racket and Haskell), a short foray into Common Lisp and then a regression back to C++. There are rarely any Python programs as I use that extensively during the day.
 
 
-Interesting algorithms
-----------------------
-- p0024.cpp - "forward backward" algorithm
-
+Interesting algorithms/implementations
+--------------------------------------
+- p0024.cpp - "forward backward" algorithm for generating permutations
+  p0024.recursive.cpp - implemented as a recursive calls. 
+                        Trades off readability and elegance for speed and memory
 
 
 Racket concepts and the files in which they are implemented
