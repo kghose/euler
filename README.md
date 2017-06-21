@@ -1,7 +1,13 @@
 Project Euler problems
 ----------------------
 
-Just me working through the project Euler problems, learning functional programming on the way. I started out with Racket and when I got to problem 20, I decided to try my hand at Haskell. So, 
+Just me working through the project Euler problems. I often try out different languages and paradigms as I go
+so the code reflects that. It reflects a short flirtation with functional programming (programs in racket and Haskell), a short foray into Common Lisp and then a regression back to C++. There are rarely any Python programs as I use that extensively during the day.
+
+
+Interesting algorithms
+----------------------
+- p0024.cpp - "forward backward" algorithm
 
 
 
@@ -54,3 +60,13 @@ Haskell concepts and the files in which they are implemented
 
 [haskio]: https://wiki.haskell.org/Tutorials/Programming_Haskell/String_IO
 
+
+
+C++
+---
+
+All code should be compilable as
+
+```
+g++ --std=c++14 p0019.cpp -o current
+```
