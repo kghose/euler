@@ -49,6 +49,15 @@ We repeat this for all pairs of grid points, starting from (2, 2) onwards.
 #include <cassert>
 
 
+
+/*
+First we establish if k is a power of i
+Say k = i ^ m
+We then check if m * l = j. If so, (k, l) is a double of (i, j)
+
+This algorithm is flawed
+*/
+
 /*
 First we establish if k is a power of i by repeated division.
 - divide k by i, keep quot and rem
@@ -59,6 +68,7 @@ First we establish if k is a power of i by repeated division.
     @param k
     @returns -1 if not a power, power otherwise
 */
+/*
 int power_of(int i, int k) {
     int power = 0;
     div_t dvres = div(k, i);
@@ -70,28 +80,54 @@ int power_of(int i, int k) {
     }
 }
 
-/*
-First we establish if k is a power of i
-Say k = i ^ m
-We then check if m * l = j. If so, (k, l) is a double of (i, j)
-*/
-bool equivalent_old(int i, int j, int k, int l) {
+bool equivalent(int i, int j, int k, int l) {
     int m = power_of(i, k);
     return ( m > -1 ) && ( m * l == j );
 }
 
-
-bool equivalent(int i, int j, int k, int l) {
-    return ( std::abs ( j * std::log(i) - l * std::log(k) ) < 0.0000001 );
-}
-
-
-void test() {
+void test1() {
     assert ( power_of(10, 100) == 2 );
     assert ( power_of(3, 81) == 4 );
     assert ( power_of(2, 25) == -1 );
+    assert ( power_of(2, 25) == -1 );
+}
+*/
 
+/*
+
+    The following recursive algorithm derives from the following observation:
+
+    i ^ j = k ^ j 
+    if k = m * i  with m and integer AND
+    i ^ (j - l) = m ^ l
+    This second equation can be recursively checked until we arrive at m = i
+
+*/
+// Assumes i < k 
+bool equivalent(int i, int j, int k, int l) {
+    div_t dvres = div(k, i);
+    if ( dvres.rem != 0 ) return false;
+    if ( dvres.quot == i ) return (2 * l == j);
+    if ( dvres.quot > i ) {
+        return equivalent(i, j - l, dvres.quot, l);
+    } else {
+        return equivalent(dvres.quot, l, i, j - l);        
+    }
+}
+
+
+/*
+// This has precision issues
+bool equivalent(int i, int j, int k, int l) {
+    return ( j * std::log(i) == l * std::log(k) );
+}
+*/
+
+void test() {
     assert ( equivalent(2, 4, 4, 2) );
+    assert ( equivalent(6, 4, 36, 2) );
+    assert ( equivalent(2, 6, 4, 3) );
+    assert ( equivalent(8, 68, 16, 51) );
 
     assert ( ! equivalent(2, 4, 5, 2) );
 
@@ -119,8 +155,9 @@ int search_grid(int a_max, int b_max) {
         for( int j = 2; j <= b_max; j++ ) {
             if (grid[i][j] == 1) continue; 
             for( int k = i + 1; k <= a_max; k++ ) {
-                for( int l = 2; l <= b_max; l++ ) {
+                for( int l = 2; l < j; l++ ) {
                     if (grid[k][l] == 1) continue;
+                    // std::cout << i << " ^ " << j << " : " << k << " ^ " << l << std::endl;
                     if (equivalent (i, j, k, l)) { grid[k][l] = 1; }
                 }
             }
