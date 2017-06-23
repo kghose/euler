@@ -66,8 +66,12 @@ Haskell concepts and the files in which they are implemented
 C++
 ---
 
-All code should be compilable as
+All code can be compiled with `g++ --std=c++14 pXXXX.cpp -o current`
 
-```
-g++ --std=c++14 p0019.cpp -o current
-```
+
+### [`const` member function](https://stackoverflow.com/a/21492333/2512851)
+
+`p0032.cpp`
+
+> To be able to call a function on a const object, you need to promise the compiler that the function will not modify the object. To do that, you mark the function with the keyword const after its argument list.
+
