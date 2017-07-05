@@ -7,9 +7,17 @@ so the code reflects that. It reflects a short flirtation with functional progra
 
 Interesting algorithms/implementations
 --------------------------------------
-- p0024.cpp - "forward backward" algorithm for generating permutations
-  p0024.recursive.cpp - implemented as a recursive calls. 
+- `p0024.cpp` - "forward backward" algorithm for generating permutations
+  `p0024.recursive.cpp` - implemented as a recursive calls. 
                         Trades off readability and elegance for speed and memory
+  also `p0032.cpp`
+
+
+Notes on the problems
+---------------------
+- p34 Interesting that there are only two such numbers ever: 145 and 40585
+
+
 
 
 Racket concepts and the files in which they are implemented
@@ -71,7 +79,7 @@ All code can be compiled with `g++ --std=c++14 pXXXX.cpp -o current`
 
 ### [`const` member function](https://stackoverflow.com/a/21492333/2512851)
 
-`p0032.cpp`
+`p0032.cpp`, `p0034.cpp`
 
 > To be able to call a function on a const object, you need to promise the compiler that the function will not modify the object. To do that, you mark the function with the keyword const after its argument list.
 
