@@ -5,62 +5,47 @@
  * is the number you pass to the program. Because of it's simplicity it can only
  * work up to N = 9
  *
- * Compile with: g++ -O3 -lpthread -fopenmp z-squishy-square.cpp -o squishy
- * Set omp threads env variable before running: e.g.  export OMP_NUM_THREADS=12
+ * Compile with: g++ -O3 z-squishy-square.cpp -o squishy
  *
  */
 #include <cmath>
 #include <cstdint>
 #include <iostream>
 
-const uint64_t powers_of_ten[] = {10,     100,      1000,      10000,
-                                  100000, 10000000, 100000000, 1000000000};
+// Integer powers of ten using only integer arithmetic.
+uint64_t pow10i(uint64_t i) {
+  uint64_t r = 1;
+  for (uint64_t j = 0; j < i; j++) {
+    r *= 10;
+  }
+  return r;
+}
 
+// Range of numbers to search whose squares will have an even number of digits.
 struct Range {
-  uint64_t start, stop;
+  uint64_t start, stop, p;
 };
 
-struct CandidateRange {
-  Range high, low;
-  uint64_t pow_ten;
-};
-
-CandidateRange get_candidate_range(uint64_t pow_ten) {
-  return CandidateRange{Range{pow_ten / 10, pow_ten - 1}, Range{0, pow_ten - 1},
-                        pow_ten};
+// Given a digit count i find us the range of numbers whose squares will have 2i
+// digits
+Range get_range(uint64_t i) {
+  uint64_t p = pow10i(i);
+  uint64_t start = ceil(sqrt(pow10i(2 * i - 1)));
+  uint64_t stop = p - 1;
+  return Range{start, stop, p};
 }
 
-struct Candidate {
-  uint64_t high, low, pow_ten;
-};
-
-bool is_squishy(const Candidate &candidate) {
-  uint64_t number = candidate.low + candidate.high * candidate.pow_ten;
-  uint64_t sum = candidate.low + candidate.high;
-  return (sum * sum == number);
-}
-
-bool next_candidate(Candidate &candidate, uint64_t max_pow_ten) {
-  uint64_t next_low = candidate.low + 1;
-  uint64_t next_high = candidate.high;
-  if (next_low == candidate.pow_ten) {
-    next_low = 0;
-    next_high += 1;
-  }
-  if (next_high == candidate.pow_ten) {
-    if (candidate.pow_ten == max_pow_ten) {
-      return false;
-    }
-    candidate.pow_ten *= 10;
-  }
-  candidate.low = next_low;
-  candidate.high = next_high;
-  return true;
+// Given a number n, tell us if n*n is squishy
+bool is_squishy(uint64_t n, uint64_t p) {
+  uint64_t square = n * n;
+  uint64_t high = square / p;
+  uint64_t low = square - high * p;
+  return n == high + low;
 }
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    std::cout << "Invoke as ./squishy <number of digits to compute to>"
+    std::cout << "Invoke as ./squishy <1/2 the number of digits to compute to>"
               << std::endl;
     exit(1);
   }
@@ -70,18 +55,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  for (uint64_t idx = 0; idx < N; idx++) {
-    CandidateRange c_range = get_candidate_range(powers_of_ten[idx]);
-    for (uint64_t high = c_range.high.start; high <= c_range.high.stop;
-         high++) {
-#pragma omp parallel for
-      for (uint64_t low = c_range.low.start; low <= c_range.low.stop; low++) {
-
-        Candidate candidate{high, low, c_range.pow_ten};
-        if (is_squishy(candidate)) {
-          std::cout << candidate.high * candidate.pow_ten + candidate.low
-                    << std::endl;
-        }
+  for (uint64_t idx = 1; idx <= N; idx++) {
+    Range c_range = get_range(idx);
+    for (uint64_t n = c_range.start; n <= c_range.stop; n++) {
+      if (is_squishy(n, c_range.p)) {
+        std::cout << n * n << std::endl;
       }
     }
   }
