@@ -1,8 +1,17 @@
 Project Euler problems
 ----------------------
 
-Just me working through the project Euler problems. I often try out different languages and paradigms as I go
-so the code reflects that. It reflects a short flirtation with functional programming (programs in racket and Haskell), a short foray into Common Lisp and then a regression back to C++. There are rarely any Python programs as I use that extensively during the day.
+![](https://projecteuler.net/profile/kghose.png)
+
+
+Just me working through the [project Euler] problems. I often try out different
+languages and paradigms as I go so the code reflects that. It reflects a short
+flirtation with functional programming (programs in racket and Haskell), a short
+foray into Common Lisp and then a regression back to C++. There are rarely any
+Python programs as I use that extensively during the day.
+
+
+[Project Euler]:https://projecteuler.net/
 
 
 Interesting algorithms/implementations
