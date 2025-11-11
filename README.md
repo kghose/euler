@@ -24,8 +24,8 @@ Interesting algorithms/implementations
 
 Notes on the problems
 ---------------------
-- p34 Interesting that there are only two such numbers ever: 145 and 40585
-
+- p34: Interesting that there are only two such numbers ever: 145 and 40585
+- p37: Only 11 trunactable primes ever? I wonder what that tells us about math?
 
 
 
