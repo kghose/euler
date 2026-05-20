@@ -54,11 +54,35 @@ inline std::optional<int> Operate::operator()(const Operation &o) {
 
 TEST_CASE("test basic operations") {
 
-  SUBCASE("add") {
+  SUBCASE("plus") {
     Operand l = 1, r = 1;
     Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Plus};
 
-    auto a = std::visit(Operate{}, o); 
-    CHECK(a.value() == 2); 
+    auto a = std::visit(Operate{}, o);
+    CHECK(a.value() == 2);
+  }
+
+  SUBCASE("minus") {
+    Operand l = 3, r = 1;
+    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Minus};
+
+    auto a = std::visit(Operate{}, o);
+    CHECK(a.value() == 2);
+  }
+
+  SUBCASE("divide") {
+    Operand l = 4, r = 2;
+    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Divide};
+
+    auto a = std::visit(Operate{}, o);
+    CHECK(a.value() == 2);
+  }
+
+  SUBCASE("multiply") {
+    Operand l = 1, r = 2;
+    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Multiply};
+
+    auto a = std::visit(Operate{}, o);
+    CHECK(a.value() == 2);
   }
 }
