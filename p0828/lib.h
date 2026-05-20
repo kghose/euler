@@ -4,7 +4,6 @@
 #include <optional>
 #include <variant>
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
 enum class Op { Minus, Plus, Divide, Multiply };
@@ -57,7 +56,7 @@ TEST_CASE("test basic operations") {
 
   SUBCASE("add") {
     Operand l = 1, r = 1;
-    Operand o = Operation{.lhs = l, .rhs = r};
+    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Plus};
 
     auto a = std::visit(Operate{}, o); 
     CHECK(a.value() == 2); 
