@@ -1,9 +1,9 @@
 /*
- * Compile: g++ tests_main.cpp
- * Run tests: ./a.out
+ * Compile: cmake --build .
+ * Run tests: ./tests_main
  */
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "lib.h"
+#include "operation.h"
  
