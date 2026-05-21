@@ -119,28 +119,26 @@ TEST_CASE("test operations with illegal results") {
     auto a = o.compute();
     CHECK(a.has_value() == false);
   }
+}
 
-  SUBCASE("minus") {
-    Operand l = 3, r = 1;
-    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Minus};
+TEST_CASE("nested operands") {
 
-    auto a = std::visit(Operate{}, o);
-    CHECK(a.value() == 2);
+  SUBCASE("nested lhs") {
+    Operand a = 4, b = 2, c = 1,
+            lhs = Operation{.lhs = a, .rhs = b, .op = Op::Divide};
+    Operation o{.lhs = lhs, .rhs = c, .op = Op::Minus};
+
+    auto ans = o.compute();
+    CHECK(ans.value() == 1);
   }
 
-  SUBCASE("divide") {
-    Operand l = 4, r = 2;
-    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Divide};
+  SUBCASE("nested lhs,rhs") {
+    Operand a = 4, b = 2, c = 6, d = 3,
+            lhs = Operation{.lhs = a, .rhs = b, .op = Op::Divide},
+            rhs = Operation{.lhs = c, .rhs = d, .op = Op::Divide};
+    Operation o{.lhs = lhs, .rhs = rhs, .op = Op::Minus};
 
-    auto a = std::visit(Operate{}, o);
-    CHECK(a.value() == 2);
-  }
-
-  SUBCASE("multiply") {
-    Operand l = 1, r = 2;
-    Operand o = Operation{.lhs = l, .rhs = r, .op = Op::Multiply};
-
-    auto a = std::visit(Operate{}, o);
-    CHECK(a.value() == 2);
+    auto ans = o.compute();
+    CHECK(ans.value() == 0);
   }
 }
