@@ -97,72 +97,65 @@ TEST_CASE("test basic operations") {
   Operand l = 0, r = 1;
   Expression e{.lhs = l, .rhs = r, .opIdx = 0};
 
-  auto tc = GENERATE(TestCase{.name = "plus",
-                              .c = Calculation{.num = std::vector<int>{1, 1},
-                                               .op = std::vector<Op>{Op::Plus},
-                                               .e = e},
-                              .want = 2},
-                     TestCase{.name = "minus",
-                              .c = Calculation{.num = std::vector<int>{2, 1},
-                                               .op = std::vector<Op>{Op::Minus},
-                                               .e = e},
-                              .want = 1},
-                     TestCase{.name = "divide",
-                              .c = Calculation{.num = std::vector<int>{6, 2},
-                                               .op = std::vector<Op>{Op::Div},
-                                               .e = e},
-                              .want = 3},
-                     TestCase{.name = "multiply",
-                              .c = Calculation{.num = std::vector<int>{3, 2},
-                                               .op = std::vector<Op>{Op::Mult},
-                                               .e = e},
-                              .want = 6}
+  auto tc = GENERATE(
+      TestCase{.name = "plus",
+               .c = Calculation{.num = {1, 1}, .op = {Op::Plus}, .e = e},
+               .want = 2},
+      TestCase{.name = "minus",
+               .c = Calculation{.num = {2, 1}, .op = {Op::Minus}, .e = e},
+               .want = 1},
+      TestCase{.name = "divide",
+               .c = Calculation{.num = {6, 2}, .op = {Op::Div}, .e = e},
+               .want = 3},
+      TestCase{.name = "multiply",
+               .c = Calculation{.num = {3, 2}, .op = {Op::Mult}, .e = e},
+               .want = 6}
 
   );
 
-  SUBCASE(tc.name);
-  CHECK(tc.c.eval() == tc.want);
+  SUBCASE(tc.name) { CHECK(tc.c.eval() == tc.want); }
 }
 
-/*
 TEST_CASE("test operations with illegal results") {
+  Operand l = 0, r = 1;
+  Expression e{.lhs = l, .rhs = r, .opIdx = 0};
 
-  SUBCASE("negative input") {
-    Operand l = 1, r = -1;
-    Operation o{.lhs = l, .rhs = r, .op = Op::Plus};
+  auto tc = GENERATE(
+      TestCase{.name = "negative input",
+               .c = Calculation{.num = {1, -1}, .op = {Op::Plus}, .e = e},
+               .want = 0},
+      TestCase{.name = "negative result",
+               .c = Calculation{.num = std::vector<int>{1, 2},
+                                .op = std::vector<Op>{Op::Minus},
+                                .e = e},
+               .want = 0});
 
-    auto a = o.compute();
-    CHECK(a.has_value() == false);
-  }
-
-  SUBCASE("negative result") {
-    Operand l = 1, r = 2;
-    Operation o{.lhs = l, .rhs = r, .op = Op::Minus};
-
-    auto a = o.compute();
-    CHECK(a.has_value() == false);
-  }
+  SUBCASE(tc.name) { CHECK(tc.c.eval().has_value() == false); }
 }
 
 TEST_CASE("nested operands") {
 
   SUBCASE("nested lhs") {
-    Operand a = 4, b = 2, c = 1,
-            lhs = Operation{.lhs = a, .rhs = b, .op = Op::Divide};
-    Operation o{.lhs = lhs, .rhs = c, .op = Op::Minus};
+    Operand a = 0, b = 1, c = 2;
+    Operand el = Expression{.lhs = a, .rhs = b, .opIdx = 0};
+    Expression e{.lhs = el, .rhs = c, .opIdx = 1};
+    auto ans = Calculation{.num = {4, 2, 1}, .op = {Op::Div, Op::Minus}, .e = e}
+                   .eval();
 
-    auto ans = o.compute();
     CHECK(ans.value() == 1);
   }
 
   SUBCASE("nested lhs,rhs") {
-    Operand a = 4, b = 2, c = 6, d = 3,
-            lhs = Operation{.lhs = a, .rhs = b, .op = Op::Divide},
-            rhs = Operation{.lhs = c, .rhs = d, .op = Op::Divide};
-    Operation o{.lhs = lhs, .rhs = rhs, .op = Op::Minus};
+    Operand a = 0, b = 1, c = 2, d = 3;
+    Operand el = Expression{.lhs = a, .rhs = b, .opIdx = 0};
+    Operand er = Expression{.lhs = c, .rhs = d, .opIdx = 1};
 
-    auto ans = o.compute();
+    Expression e{.lhs = el, .rhs = er, .opIdx = 2};
+    auto ans = Calculation{.num = {4, 2, 6, 3},
+                           .op = {Op::Div, Op::Div, Op::Minus},
+                           .e = e}
+                   .eval();
+
     CHECK(ans.value() == 0);
   }
 }
-*/
