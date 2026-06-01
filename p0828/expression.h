@@ -19,6 +19,30 @@
 
 enum class Op { Minus, Plus, Div, Mult };
 
+struct Expression;
+struct LeafInt {};
+
+using Operand = std::variant<LeafInt, Expression>;
+
+struct Expression {
+  Operand &lhs, &rhs;
+};
+
+inline Operand LEAF = LeafInt{};
+
+struct Calculation {
+  std::vector<int> num;
+  std::vector<Op> op;
+  const Expression e;
+
+  size_t leafIdx = 0, opIdx = 0;
+
+  std::optional<int> eval() { return std::visit(*this, Operand(e)); }
+
+  std::optional<int> operator()(const LeafInt _) { return num[leafIdx++]; }
+  std::optional<int> operator()(const Expression &e);
+};
+
 inline std::optional<int> compute(int lv, int rv, Op op) {
   switch (op) {
   case Op::Minus:
@@ -37,30 +61,6 @@ inline std::optional<int> compute(int lv, int rv, Op op) {
     return lv * rv;
   }
 }
-
-struct Expression;
-struct LeafInt {};
-
-using Operand = std::variant<LeafInt, Expression>;
-
-struct Expression {
-  Operand &lhs, &rhs;
-};
-
-struct Calculation {
-  std::vector<int> num;
-  std::vector<Op> op;
-  const Expression e;
-
-  size_t leafIdx = 0, opIdx = 0;
-
-  std::optional<int> eval() { return std::visit(*this, Operand(e)); }
-
-  std::optional<int> operator()(const LeafInt _) { return num[leafIdx++]; }
-  std::optional<int> operator()(const Expression &e);
-};
-
-inline Operand LEAF = LeafInt{};
 
 inline std::optional<int> Calculation::operator()(const Expression &e) {
   std::optional<int> l = std::visit(*this, e.lhs);
