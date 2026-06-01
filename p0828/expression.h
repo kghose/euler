@@ -1,6 +1,6 @@
 /*
  * Expression describes the binary tree shape of the expression.
- * Each node is statically and uniquely numbered (OpIdx) as is each leaf
+ * Each node and leaf is statically, uniquely and automatically numbered
  *
  * Calculate furnishes a list of numbers and a list of operations and
  * then computes the value of the expression by substituting the
@@ -38,16 +38,13 @@ inline std::optional<int> compute(int lv, int rv, Op op) {
   }
 }
 
-typedef int OpIdx;
-typedef int NumIdx;
-
 struct Expression;
+struct LeafInt {};
 
-using Operand = std::variant<NumIdx, Expression>;
+using Operand = std::variant<LeafInt, Expression>;
 
 struct Expression {
   Operand &lhs, &rhs;
-  OpIdx opIdx;
 };
 
 struct Calculation {
@@ -55,11 +52,15 @@ struct Calculation {
   std::vector<Op> op;
   const Expression e;
 
+  size_t leafIdx = 0, opIdx = 0;
+
   std::optional<int> eval() { return std::visit(*this, Operand(e)); }
 
-  std::optional<int> operator()(const NumIdx i) { return num[i]; }
+  std::optional<int> operator()(const LeafInt _) { return num[leafIdx++]; }
   std::optional<int> operator()(const Expression &e);
 };
+
+inline Operand LEAF = LeafInt{};
 
 inline std::optional<int> Calculation::operator()(const Expression &e) {
   std::optional<int> l = std::visit(*this, e.lhs);
@@ -74,7 +75,7 @@ inline std::optional<int> Calculation::operator()(const Expression &e) {
     return std::nullopt;
   }
 
-  auto a = compute(lv, rv, op[e.opIdx]);
+  auto a = compute(lv, rv, op[opIdx++]);
   if (!a.has_value()) {
     return std::nullopt;
   }
@@ -94,8 +95,7 @@ struct TestCase {
 };
 
 TEST_CASE("test basic operations") {
-  Operand l = 0, r = 1;
-  Expression e{.lhs = l, .rhs = r, .opIdx = 0};
+  Expression e{.lhs = LEAF, .rhs = LEAF};
 
   auto tc = GENERATE(
       TestCase{.name = "plus",
@@ -117,8 +117,7 @@ TEST_CASE("test basic operations") {
 }
 
 TEST_CASE("test operations with illegal results") {
-  Operand l = 0, r = 1;
-  Expression e{.lhs = l, .rhs = r, .opIdx = 0};
+  Expression e{.lhs = LEAF, .rhs = LEAF};
 
   auto tc = GENERATE(
       TestCase{.name = "negative input",
@@ -136,9 +135,8 @@ TEST_CASE("test operations with illegal results") {
 TEST_CASE("nested operands") {
 
   SUBCASE("nested lhs") {
-    Operand a = 0, b = 1, c = 2;
-    Operand el = Expression{.lhs = a, .rhs = b, .opIdx = 0};
-    Expression e{.lhs = el, .rhs = c, .opIdx = 1};
+    Operand el = Expression{.lhs = LEAF, .rhs = LEAF};
+    Expression e{.lhs = el, .rhs = LEAF};
     auto ans = Calculation{.num = {4, 2, 1}, .op = {Op::Div, Op::Minus}, .e = e}
                    .eval();
 
@@ -146,11 +144,10 @@ TEST_CASE("nested operands") {
   }
 
   SUBCASE("nested lhs,rhs") {
-    Operand a = 0, b = 1, c = 2, d = 3;
-    Operand el = Expression{.lhs = a, .rhs = b, .opIdx = 0};
-    Operand er = Expression{.lhs = c, .rhs = d, .opIdx = 1};
+    Operand el = Expression{.lhs = LEAF, .rhs = LEAF};
+    Operand er = Expression{.lhs = LEAF, .rhs = LEAF};
 
-    Expression e{.lhs = el, .rhs = er, .opIdx = 2};
+    Expression e{.lhs = el, .rhs = er};
     auto ans = Calculation{.num = {4, 2, 6, 3},
                            .op = {Op::Div, Op::Div, Op::Minus},
                            .e = e}
