@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"runtime"
 )
 
 func loadPrimes(m int) []int {
@@ -30,20 +29,10 @@ func loadPrimes(m int) []int {
 	return primes
 }
 
-
-func printMemUsage() {
-	var m runtime.MemStats
-	runtime.ReadMemStats(&m)
-	fmt.Printf("Heap: %v KB\n",m.Alloc/1024)
-	fmt.Printf("Total: %v KB\n", m.Sys/1024)
-}
-
-
 func main() {
 	target := 2026
 
 	primes := loadPrimes(target)
-	return
 
 	lists := getLists(0, []int{}, target, &primes)
 
