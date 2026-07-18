@@ -22,3 +22,20 @@ There are two things we can do
 1. There are 307 primes under 2026. Instead of saving the actual list of primes as
    `[]int` we could save them as `[]int16`  
 
+## C++ version
+
+```
+cmake -B build
+cmake --build build
+```
+
+Build debug version
+```
+
+```
+
+
+Get time and memory usage
+```
+/usr/bin/time -v ./build/main 200
+```
